@@ -144,7 +144,7 @@ def porovnaj_2_obrazy(oko1, oko2):
     """
     zoznam = []
     i = 0
-    print("Hamingove vzdialenosti:")
+    #print("Hamingove vzdialenosti:")
     while (i < WIDTH):
         oko2 = np.roll(oko2, 1, axis=1)
         hamingova_vzdialenost = haming(oko1, oko2)
@@ -246,14 +246,22 @@ def menu_sprav_histogram():
 
         #index, hamingova = porovnaj_2_obrazy(oko1, oko2)
 
+    testovacie_oko = vsetky_oci[0]
+    okoPevne = priprav_obraz(testovacie_oko.template[0], testovacie_oko.mask[0])
+    for i in range(1, 10):
+        testovacie_oko2 = vsetky_oci[i]
+        okoTest = priprav_obraz(testovacie_oko2.template[0], testovacie_oko2.mask[0])
+        index, hamingova = porovnaj_2_obrazy(okoPevne, okoTest)
+        vysledky_rozne.append(hamingova)
+
     print(vysledky_rovnake)
     urob_histogram(vysledky_rovnake,vysledky_rozne)
 
 def urob_histogram(vysledky_rovnake,vysledky_rozne):
-    plt.hist(vysledky_rovnake)
-    plt.title("Gaussian Histogram")
-    plt.xlabel("Value")
-    plt.ylabel("Frequency")
+    plt.hist([vysledky_rovnake,vysledky_rozne])
+    plt.title("Histogram podobnosti")
+    plt.xlabel("Podobnost")
+    plt.ylabel("Pocetnost")
 
     #fig = plt.gcf()
     plt.show()
