@@ -136,19 +136,9 @@ def normuj_rad(arr):
     return [int(i/255) for i in arr]
 
 def priprav_obraz(template,maska):
-    znormovany_template = normalize_columns(templates[0])
-    print(znormovany_template[0])
-    print(masks[0])
-    misc.imshow(znormovany_template)
-    misc.imshow(masks[0])
-    pouzita_maska = use_mask(znormovany_template, masks[0], HEIGHT, WIDTH)
-    i = 0
-    while (i < 200):
-        pouzita_maska = np.roll(pouzita_maska, 50, axis=1)
-        misc.imshow(pouzita_maska)
-        i += 20
-    print()
-    return result
+    znormovany_template = normalize_columns(template)
+    pouzita_maska = use_mask(znormovany_template, maska, HEIGHT, WIDTH)
+    return pouzita_maska
 
 if __name__=="__main__":
     #load_all_data()
@@ -179,14 +169,16 @@ if __name__=="__main__":
     misc.imshow(znormovany_template)
     misc.imshow(masks[0])
     pouzita_maska = use_mask(znormovany_template,masks[0],HEIGHT,WIDTH)
+    """
+    test rotacie
     i=0
     while (i<200):
         pouzita_maska = np.roll(pouzita_maska, 50, axis=1)
         misc.imshow(pouzita_maska)
         i+=20
     print()
-
-    print
+    """
+    misc.imshow(priprav_obraz(templates[0], masks[0]))
 
     """
     print(use_mask(matica,matica2,4,4))
