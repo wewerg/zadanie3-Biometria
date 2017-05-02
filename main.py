@@ -141,6 +141,12 @@ def priprav_obraz(template,maska):
     return pouzita_maska
 
 def porovnaj_2_obrazy(oko1, oko2):
+    """
+    Porovna zhodu 2 oci
+    :param oko1: 
+    :param oko2: 
+    :return: index rotacie, hamingova vzdialenost
+    """
     zoznam = []
     i = 0
     print("Hamingove vzdialenosti:")
@@ -153,9 +159,31 @@ def porovnaj_2_obrazy(oko1, oko2):
     minimalna_hodnota = min(zoznam)
     index = zoznam.index(minimalna_hodnota)
     print("Najmensia hamingova vzdialenost: {}, pri rotacii: {}".format(minimalna_hodnota,index))
-    return minimalna_hodnota, index
+    return  index, minimalna_hodnota
 
-
+def zobraz_zhodu(oko1, oko2, rotacia):
+    """
+    Zobrazenie zhody 2 oci - sive su zhodne
+    :param oko1: 
+    :param oko2: 
+    :param rotacia: 
+    
+    """
+    oko2 = np.roll(oko2, rotacia, axis=1)
+    sizex = HEIGHT
+    sizey = WIDTH
+    oci = np.zeros((sizex, sizey))
+    for i in range(sizex):
+        for j in range(sizey):
+            if(oko1[i][j]) == 1 and (oko2[i][j]) == 1:
+                oci[i,j]= 1
+            elif (oko1[i][j]) == 1 and (oko2[i][j]) == 0:
+                oci[i, j] = 0.5
+            elif (oko1[i][j]) == 0 and (oko2[i][j]) == 1:
+                oci[i, j] = 0.3
+            else:
+                oci[i, j] = 0
+    misc.imshow(oci)
 
 if __name__=="__main__":
     #load_all_data()
@@ -201,8 +229,9 @@ if __name__=="__main__":
     #misc.imshow(oko1)
     #misc.imshow(oko2)
 
-    porovnaj_2_obrazy(oko1, oko2)
-    print("Hamingova vzdialenost je {}".format(haming(oko1, oko2)))
+    index, hamingova = porovnaj_2_obrazy(oko1, oko2)
+    zobraz_zhodu(oko1, oko2, index)
+
 
 
     """
