@@ -69,7 +69,7 @@ def load_all_data():
     print(alleyes)
 
 def load_eye(i,s):
-    """Nacita oko
+    """Nacita vsetky oci pre
         i subject
         s side
     """
@@ -140,6 +140,23 @@ def priprav_obraz(template,maska):
     pouzita_maska = use_mask(znormovany_template, maska, HEIGHT, WIDTH)
     return pouzita_maska
 
+def porovnaj_2_obrazy(oko1, oko2):
+    zoznam = []
+    i = 0
+    print("Hamingove vzdialenosti:")
+    while (i < WIDTH):
+        oko2 = np.roll(oko2, 1, axis=1)
+        hamingova_vzdialenost = haming(oko1, oko2)
+        i += 1
+        zoznam.append(hamingova_vzdialenost)
+        print(i,hamingova_vzdialenost)
+    minimalna_hodnota = min(zoznam)
+    index = zoznam.index(minimalna_hodnota)
+    print("Najmensia hamingova vzdialenost: {}, pri rotacii: {}".format(minimalna_hodnota,index))
+    return minimalna_hodnota, index
+
+
+
 if __name__=="__main__":
     #load_all_data()
     np.set_printoptions(precision=3)
@@ -161,7 +178,7 @@ if __name__=="__main__":
 
 
 
-
+    """
     print("Normovanie: ")
     znormovany_template = normalize_columns(templates[0])
     print(znormovany_template[0])
@@ -169,6 +186,7 @@ if __name__=="__main__":
     misc.imshow(znormovany_template)
     misc.imshow(masks[0])
     pouzita_maska = use_mask(znormovany_template,masks[0],HEIGHT,WIDTH)
+    """
     """
     test rotacie
     i=0
@@ -178,7 +196,14 @@ if __name__=="__main__":
         i+=20
     print()
     """
-    misc.imshow(priprav_obraz(templates[0], masks[0]))
+    oko1 = (priprav_obraz(templates[2], masks[2]))
+    oko2 = (priprav_obraz(templates[0], masks[0]))
+    #misc.imshow(oko1)
+    #misc.imshow(oko2)
+
+    porovnaj_2_obrazy(oko1, oko2)
+    print("Hamingova vzdialenost je {}".format(haming(oko1, oko2)))
+
 
     """
     print(use_mask(matica,matica2,4,4))
