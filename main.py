@@ -61,12 +61,7 @@ def create_histogram():
     """histogram pocetnosti """
     pass
 
-def load_all_data():
-    alleyes = []
-    for i in range(1,10):
-        for j in range(1,3):
-            alleyes.append(load_eye(i,j))
-    print(alleyes)
+
 
 def load_eye(i,s):
     """Nacita vsetky oci pre
@@ -231,8 +226,56 @@ def menu_zobrazenie_jednej_vzorky():
     misc.imshow(oko1)
     return True
 
+def menu_sprav_histogram():
+    print("Nacitanie vsetkych dat")
+    vysledky_rovnake = []
+    vysledky_rozne = []
+    vsetky_oci = load_all_data() #toto je pole vsetkych subjektov
+    for oko in vsetky_oci:
+        okoPevne = priprav_obraz(oko.template[0], oko.mask[0])
+        #porovnanie srovnakymi
+        for vzorka in range (1,3):
+            #v jednom oku 3 vzorky
+            #teda to iste oko
+            #print(oko.template[vzorka])
+            #oko aj s maskou
+            okoM = priprav_obraz(oko.template[vzorka],oko.mask[vzorka])
+            index, hamingova = porovnaj_2_obrazy(okoPevne, okoM)
+            vysledky_rovnake.append(hamingova)
+        #tuto idu ine oka
+
+        #index, hamingova = porovnaj_2_obrazy(oko1, oko2)
+
+    print(vysledky_rovnake)
+    urob_histogram(vysledky_rovnake,vysledky_rozne)
+
+def urob_histogram(vysledky_rovnake,vysledky_rozne):
+    plt.hist(vysledky_rovnake)
+    plt.title("Gaussian Histogram")
+    plt.xlabel("Value")
+    plt.ylabel("Frequency")
+
+    #fig = plt.gcf()
+    plt.show()
+
+
+class person(object):
+    def __init__(self,name,template,mask):
+        self.name = name
+        self.template = template
+        self.mask = mask
+
+def load_all_data():
+    alleyes = []
+    for i in range(1,10):
+        for j in range(1,3):
+            templates, masks = load_eye(i, j)
+            trieda = str(i)+str(j)
+            alleyes.append(person(trieda,templates,masks))
+    return alleyes
+
 if __name__=="__main__":
-    menu_porovnanie_vzoriek()
+    menu_sprav_histogram()
     #load_all_data()
     np.set_printoptions(precision=3)
     templates, masks = load_eye(1,1)
@@ -249,7 +292,7 @@ if __name__=="__main__":
 
     #shift
     x = np.roll(matica, 2, axis=1)
-    print("Hamingova vzdialenost je {}".format(haming(matica, matica2)))
+    #print("Hamingova vzdialenost je {}".format(haming(matica, matica2)))
 
 
 
@@ -276,8 +319,8 @@ if __name__=="__main__":
     #misc.imshow(oko1)
     #misc.imshow(oko2)
 
-    index, hamingova = porovnaj_2_obrazy(oko1, oko2)
-    zobraz_zhodu(oko1, oko2, index)
+    #index, hamingova = porovnaj_2_obrazy(oko1, oko2)
+    #zobraz_zhodu(oko1, oko2, index)
 
 
 
