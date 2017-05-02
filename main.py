@@ -16,8 +16,14 @@ LEFT, RIGHT =  'left', 'right'
 WIDTH = 480
 HEIGHT = 20
 
-#pomenovana ntica
-Person = namedtuple("Person","left_temp1 left_mask1 right_temp1 right_mask1")
+
+
+class person(object):
+    def __init__(self,name,template,mask):
+        self.name = name
+        self.template = template
+        self.mask = mask
+
 
 def use_mask(template, mask, sizex,sizey):
     result = np.zeros((sizex, sizey))
@@ -96,7 +102,7 @@ def menu():
         elif ans == "2":
             ans = menu_zobrazenie_jednej_vzorky()
         elif ans == "3":
-            print("\n Student Record Found")
+            ans = menu_sprav_histogram()
         elif ans == "4":
             print("\n Goodbye")
             ans = False
@@ -182,13 +188,24 @@ def zobraz_zhodu(oko1, oko2, rotacia):
 def index_to_degrees(index):
     return 360*index/WIDTH
 
-def validate_imputs(subjekt,oko,vzorka1,vzorka2):
-    #Todo: nastavit validaciu
+def validate_imputs(subjekt,oko,vzorka1,vzorka2 = None):
+    if vzorka2 is None:
+        pass
+    else:
+        if (vzorka2 < 0) or (vzorka2 > 2):
+            return False
+
+    if (subjekt < 1) or (subjekt > 9):
+        return False
+
+    if (oko < 0) or (oko > 2):
+        return False
+
+    if (vzorka1 < 0) or (vzorka1 > 2):
+        return False
+
     return True
 
-def validate_imputs(subjekt,oko,vzorka1):
-    #Todo: nastavit validaciu
-    return True
 
 def menu_porovnanie_vzoriek():
     print("Zadaj vzorky ktore chces porovnat:")
@@ -197,8 +214,8 @@ def menu_porovnanie_vzoriek():
     vzorka1 = int(input("Vyber vzorku 1: 0-2 "))
     vzorka2 = int(input("Vyber vzorku 2: 0-2 "))
 
-    if not validate_imputs(subjekt,oko,vzorka1,vzorka2):
-        print("zle zadane parametre ")
+    if validate_imputs(subjekt,oko,vzorka1,vzorka2) is False:
+        print("!!!!!!zle zadane parametre!!!!! ")
         return False
 
     templates, masks = load_eye(subjekt, oko)
@@ -217,7 +234,7 @@ def menu_zobrazenie_jednej_vzorky():
     vzorka1 = int(input("Vyber vzorku 1: 0-2 "))
 
 
-    if not validate_imputs(subjekt, oko, vzorka1):
+    if  validate_imputs(subjekt, oko, vzorka1) is False:
         print("zle zadane parametre ")
         return False
 
@@ -254,7 +271,7 @@ def menu_sprav_histogram():
         index, hamingova = porovnaj_2_obrazy(okoPevne, okoTest)
         vysledky_rozne.append(hamingova)
 
-    print(vysledky_rovnake)
+    #print(vysledky_rovnake)
     urob_histogram(vysledky_rovnake,vysledky_rozne)
 
 def urob_histogram(vysledky_rovnake,vysledky_rozne):
@@ -267,11 +284,7 @@ def urob_histogram(vysledky_rovnake,vysledky_rozne):
     plt.show()
 
 
-class person(object):
-    def __init__(self,name,template,mask):
-        self.name = name
-        self.template = template
-        self.mask = mask
+
 
 def load_all_data():
     alleyes = []
@@ -283,71 +296,7 @@ def load_all_data():
     return alleyes
 
 if __name__=="__main__":
-    menu_sprav_histogram()
-    #load_all_data()
-    np.set_printoptions(precision=3)
-    templates, masks = load_eye(1,1)
-    """iba zapis testovacich dat
-    with open('workfile', 'w') as f:
-        f.write(str(templates))
-    """
+    menu()
 
-    #misc.imshow(mask[0])
-    #misc.imshow(template[0])
-    matica = np.matrix([[1,0, 0, 4, 5],[1,2,3,4,3],[1,2,0,4,5],[1,2,3,4,3]])
-    matica2 = np.matrix([[1, 0, 2, 4, 6], [1, 2, 3, 4, 5], [1, 2, 0, 4, 5], [1, 2, 3, 4, 5]])
-    matica3 = [255,0,0,255,255,0,0,255]
-
-    #shift
-    x = np.roll(matica, 2, axis=1)
-    #print("Hamingova vzdialenost je {}".format(haming(matica, matica2)))
-
-
-
-    """
-    print("Normovanie: ")
-    znormovany_template = normalize_columns(templates[0])
-    print(znormovany_template[0])
-    print(masks[0])
-    misc.imshow(znormovany_template)
-    misc.imshow(masks[0])
-    pouzita_maska = use_mask(znormovany_template,masks[0],HEIGHT,WIDTH)
-    """
-    """
-    test rotacie
-    i=0
-    while (i<200):
-        pouzita_maska = np.roll(pouzita_maska, 50, axis=1)
-        misc.imshow(pouzita_maska)
-        i+=20
-    print()
-    """
-    oko1 = (priprav_obraz(templates[2], masks[2]))
-    oko2 = (priprav_obraz(templates[0], masks[0]))
-    #misc.imshow(oko1)
-    #misc.imshow(oko2)
-
-    #index, hamingova = porovnaj_2_obrazy(oko1, oko2)
-    #zobraz_zhodu(oko1, oko2, index)
-
-
-
-    """
-    print(use_mask(matica,matica2,4,4))
-    print("maska jednej osoby")
-    print(masks[0])
-    """
-
-    #vypis_po_riadkoch2(mask[0])
-    #normalize_columns(matica2)
-    #merged = use_mask(template,mask,HEIGHT,WIDTH)
-
-
-##########
-    #priprava pre gui
-
-    #top = tkinter.Tk()
-    #top.mainloop()
-#########
     #menu()
-    #sys.exit(menu())
+    sys.exit(menu())
