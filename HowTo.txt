@@ -1,5 +1,41 @@
 Klasifikacia na zaklade duhovky
 _______________________________
+kamil kolarik - ma zadanie
 
+-kamera s vysokym rozlisenim
+-pouziva sa infracervene spektrum
+-invariantna voci  zmenam
+-kruh rozdelime na mensie kruhy
+-transformacia podla polarnych suradnic
+-Sobelova transformacia -
+ -aproximacia derivacie
+ - kruznice pomocou houghovej transformacie
+ -rubbersheet model - z kruhu na obbdlznik
+ - Gaborove filtre
+ - vyber masky
 
+ -porovnavanie pixel po pixeli obrazy
 
+vstupy - oka...
+porovnavanie vsetkych rovnakych a vsetkych rozdielnych oci.
+zistit histogram ako velmi sa podobaju..
+template, maska - createiristemplate
+
+480x20 - rozmery obrazka
+
+compareSamples:
+zitme prienik,
+hamingova vzdialenost.
+
+rotacia obrazu -> prehodenie stlpca..
+
+prienik - operacia or
+hamingova vzdialenost - prechadzame pixel po pixeli
+
+potom zistujeme najlepsi vysledok.. 
+
+vratime vysledok
+
+porovnavanie kazdeho s kazdym..
+
+pre graf treba znormovat - relativna pocetnost
