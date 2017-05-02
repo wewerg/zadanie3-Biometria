@@ -97,9 +97,9 @@ def menu():
         """)
         ans = input("Co chces urobit ")
         if ans == "1":
-            print("\n Student Added")
+            ans = menu_porovnanie_vzoriek()
         elif ans == "2":
-            print("\n Student Deleted")
+            ans = menu_zobrazenie_jednej_vzorky()
         elif ans == "3":
             print("\n Student Record Found")
         elif ans == "4":
@@ -155,10 +155,9 @@ def porovnaj_2_obrazy(oko1, oko2):
         hamingova_vzdialenost = haming(oko1, oko2)
         i += 1
         zoznam.append(hamingova_vzdialenost)
-        print(i,hamingova_vzdialenost)
+       #print(i,hamingova_vzdialenost)
     minimalna_hodnota = min(zoznam)
     index = zoznam.index(minimalna_hodnota)
-    print("Najmensia hamingova vzdialenost: {}, pri rotacii: {}".format(minimalna_hodnota,index))
     return  index, minimalna_hodnota
 
 def zobraz_zhodu(oko1, oko2, rotacia):
@@ -178,21 +177,69 @@ def zobraz_zhodu(oko1, oko2, rotacia):
             if(oko1[i][j]) == 1 and (oko2[i][j]) == 1:
                 oci[i,j]= 1
             elif (oko1[i][j]) == 1 and (oko2[i][j]) == 0:
-                oci[i, j] = 0.5
+                oci[i, j] = 0
             elif (oko1[i][j]) == 0 and (oko2[i][j]) == 1:
-                oci[i, j] = 0.3
+                oci[i, j] = 0
             else:
                 oci[i, j] = 0
     misc.imshow(oci)
 
+def index_to_degrees(index):
+    return 360*index/WIDTH
+
+def validate_imputs(subjekt,oko,vzorka1,vzorka2):
+    #Todo: nastavit validaciu
+    return True
+
+def validate_imputs(subjekt,oko,vzorka1):
+    #Todo: nastavit validaciu
+    return True
+
+def menu_porovnanie_vzoriek():
+    print("Zadaj vzorky ktore chces porovnat:")
+    subjekt = int(input("Vyber subjekt: 1-9 "))
+    oko = int(input("Vyber oko: 1-2 "))
+    vzorka1 = int(input("Vyber vzorku 1: 0-2 "))
+    vzorka2 = int(input("Vyber vzorku 2: 0-2 "))
+
+    if not validate_imputs(subjekt,oko,vzorka1,vzorka2):
+        print("zle zadane parametre ")
+        return False
+
+    templates, masks = load_eye(subjekt, oko)
+    oko1 = (priprav_obraz(templates[vzorka1], masks[vzorka1]))
+    oko2 = (priprav_obraz(templates[vzorka2], masks[vzorka2]))
+    index, hamingova = porovnaj_2_obrazy(oko1, oko2)
+    print("Najmensia hamingova vzdialenost: {}, pri rotacii: {}, v stupnoch : {}".format(hamingova, index, index_to_degrees(index)))
+    zobraz_zhodu(oko1, oko2, index)
+
+    return True
+
+def menu_zobrazenie_jednej_vzorky():
+    print("Zadaj vzorku ktoru chces zobrazit:")
+    subjekt = int(input("Vyber subjekt: 1-9 "))
+    oko = int(input("Vyber oko: 1-2 "))
+    vzorka1 = int(input("Vyber vzorku 1: 0-2 "))
+
+
+    if not validate_imputs(subjekt, oko, vzorka1):
+        print("zle zadane parametre ")
+        return False
+
+    templates, masks = load_eye(subjekt, oko)
+    oko1 = (priprav_obraz(templates[vzorka1], masks[vzorka1]))
+    misc.imshow(oko1)
+    return True
+
 if __name__=="__main__":
+    menu_porovnanie_vzoriek()
     #load_all_data()
     np.set_printoptions(precision=3)
     templates, masks = load_eye(1,1)
-    """iba zapis testovacich dat"""
+    """iba zapis testovacich dat
     with open('workfile', 'w') as f:
         f.write(str(templates))
-
+    """
 
     #misc.imshow(mask[0])
     #misc.imshow(template[0])
